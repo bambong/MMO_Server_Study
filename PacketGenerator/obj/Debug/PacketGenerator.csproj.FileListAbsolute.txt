@@ -1,0 +1,13 @@
+C:\Users\alsrb\source\repos\Server\PacketGenerator\bin\PacketGenerator.exe
+C:\Users\alsrb\source\repos\Server\PacketGenerator\bin\PacketGenerator.deps.json
+C:\Users\alsrb\source\repos\Server\PacketGenerator\bin\PacketGenerator.runtimeconfig.json
+C:\Users\alsrb\source\repos\Server\PacketGenerator\bin\PacketGenerator.runtimeconfig.dev.json
+C:\Users\alsrb\source\repos\Server\PacketGenerator\bin\PacketGenerator.dll
+C:\Users\alsrb\source\repos\Server\PacketGenerator\bin\PacketGenerator.pdb
+C:\Users\alsrb\source\repos\Server\PacketGenerator\obj\Debug\PacketGenerator.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\alsrb\source\repos\Server\PacketGenerator\obj\Debug\PacketGenerator.AssemblyInfoInputs.cache
+C:\Users\alsrb\source\repos\Server\PacketGenerator\obj\Debug\PacketGenerator.AssemblyInfo.cs
+C:\Users\alsrb\source\repos\Server\PacketGenerator\obj\Debug\PacketGenerator.csproj.CoreCompileInputs.cache
+C:\Users\alsrb\source\repos\Server\PacketGenerator\obj\Debug\PacketGenerator.dll
+C:\Users\alsrb\source\repos\Server\PacketGenerator\obj\Debug\PacketGenerator.pdb
+C:\Users\alsrb\source\repos\Server\PacketGenerator\obj\Debug\PacketGenerator.genruntimeconfig.cache

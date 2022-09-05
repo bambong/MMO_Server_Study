@@ -17,6 +17,8 @@ namespace Server
 
         static void Main(string[] args)
         {
+            PacketManager.Instance.Register();
+
             var host = Dns.GetHostName();
             var ipHost = Dns.GetHostEntry(host);
             var ipAddress = ipHost.AddressList[0];
