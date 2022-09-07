@@ -11,7 +11,7 @@ namespace ServerCore
     public class SendBufferHelper
     {
         public static ThreadLocal<SendBuffer> CurrentBuffer = new ThreadLocal<SendBuffer>(()=>null);
-        public static int ChunkSize { get; set; } = 4096 * 100;
+        public static int ChunkSize { get; set; } = 65535 * 100;
         public static ArraySegment<byte> Open(int reserveSize) 
         {
             if(CurrentBuffer.Value == null) 

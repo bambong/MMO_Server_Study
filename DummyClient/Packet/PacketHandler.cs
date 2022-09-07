@@ -13,7 +13,7 @@ class PacketHandler
         ServerSession serverSession = session as ServerSession;
 
 
-        Console.WriteLine($"{schatPacket.playerId} : {schatPacket.chat} ");
+     //   Console.WriteLine($"{schatPacket.playerId} : {schatPacket.chat} ");
         
     }       
 }
