@@ -21,7 +21,7 @@ namespace ServerCore
                 // 최소한 헤더는 파싱가능 한지 확인
                 if (buffer.Count < HeaderSize)
                 {
-                    Console.WriteLine($"헤더를 파싱할수 없습니다. buffer 사이즈 : {buffer.Count}");
+                    //Console.WriteLine($"헤더를 파싱할수 없습니다. buffer 사이즈 : {buffer.Count}");
                     break;
                 }
                 // 패킷이 완전체로 도착했는지 확인
@@ -29,7 +29,7 @@ namespace ServerCore
                 ushort dataSize = BitConverter.ToUInt16(buffer.Array, buffer.Offset);
                 if (buffer.Count < dataSize)
                 {
-                    Console.WriteLine($"패킷 데이터가 모자랍니다. buffer 사이즈 : {buffer.Count}");
+                    //Console.WriteLine($"패킷 데이터가 모자랍니다. buffer 사이즈 : {buffer.Count}");
                     break;
                 }
                 OnRecvPacket(new ArraySegment<byte>(buffer.Array, buffer.Offset, dataSize));
@@ -61,28 +61,39 @@ namespace ServerCore
         public abstract int OnRecv(ArraySegment<Byte> buffer);
         public abstract void OnSend(int numOfByte);
 
+        void Clear() 
+        {
+            lock (_lock)
+            {
+                _sendQueue.Clear();
+                _pendingList.Clear();
+            }
+        
+        }
+
         public void Start(Socket socket)
         {
             _socket = socket;
 
             _sendArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnSendCompleted);
-            
+
             _recvArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnRecvCompleted);
 
             _recvArgs.SetBuffer(new byte[1024], 0, 1024);
 
             RegisterRecv();
         }
-      
-        public void DisConnect() 
+
+        public void DisConnect()
         {
-            if(Interlocked.Exchange(ref _disconnected,1)== 1) 
+            if (Interlocked.Exchange(ref _disconnected, 1) == 1)
             {
                 return;
             }
             OnDisConnected(_socket.RemoteEndPoint);
             _socket.Shutdown(SocketShutdown.Both);
             _socket.Close();
+            Clear();
         }
         public void Send(ArraySegment<byte> sendBuff)
         {
@@ -98,6 +109,11 @@ namespace ServerCore
         #region 네트워크 통신
         void RegisterSend()
         {
+            if (_disconnected == 1)
+            {
+                return;
+            }
+
             while (_sendQueue.Count > 0) 
             {
 
@@ -107,11 +123,22 @@ namespace ServerCore
             }
             _sendArgs.BufferList =  _pendingList;
 
-            bool pending = _socket.SendAsync(_sendArgs);
-            if (pending == false)
+
+            try 
             {
-                OnSendCompleted(null, _sendArgs);
+                bool pending = _socket.SendAsync(_sendArgs);
+                if (pending == false)
+                {
+                    OnSendCompleted(null, _sendArgs);
+                }
+
             }
+            catch (Exception e) 
+            {
+                Console.WriteLine($"RegisterSend Failed {e}");
+            }
+
+    
         }
         void OnSendCompleted(object sender, SocketAsyncEventArgs args)
         {
@@ -146,15 +173,28 @@ namespace ServerCore
         }
         void RegisterRecv()
         {
-            _recvBuffer.Clean();
-            var segement = _recvBuffer.WriteSegement;
-            _recvArgs.SetBuffer(segement.Array, segement.Offset, segement.Count);
-
-            bool pending = _socket.ReceiveAsync(_recvArgs);
-            if (pending == false)
+            if (_disconnected == 1)
             {
-                OnRecvCompleted(null, _recvArgs);
+                return;
             }
+
+            try 
+            {
+                _recvBuffer.Clean();
+                var segement = _recvBuffer.WriteSegement;
+                _recvArgs.SetBuffer(segement.Array, segement.Offset, segement.Count);
+
+                bool pending = _socket.ReceiveAsync(_recvArgs);
+                if (pending == false)
+                {
+                    OnRecvCompleted(null, _recvArgs);
+                }
+            }
+            catch (Exception e) 
+            {
+                Console.WriteLine($"RegisterRecv Failed {e}");
+            }
+           
         }
        
         void OnRecvCompleted(object sender,SocketAsyncEventArgs args ) 

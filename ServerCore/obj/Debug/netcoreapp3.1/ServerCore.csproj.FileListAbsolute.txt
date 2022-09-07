@@ -7,3 +7,4 @@ C:\Users\alsrb\source\repos\Server\ServerCore\bin\Debug\netcoreapp3.1\ServerCore
 C:\Users\alsrb\source\repos\Server\ServerCore\bin\Debug\netcoreapp3.1\ServerCore.pdb
 C:\Users\alsrb\source\repos\Server\ServerCore\obj\Debug\netcoreapp3.1\ServerCore.dll
 C:\Users\alsrb\source\repos\Server\ServerCore\obj\Debug\netcoreapp3.1\ServerCore.pdb
+C:\Users\alsrb\source\repos\Server\ServerCore\obj\Debug\netcoreapp3.1\ServerCore.csproj.AssemblyReference.cache

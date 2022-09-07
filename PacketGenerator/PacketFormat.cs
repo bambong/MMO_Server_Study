@@ -18,15 +18,11 @@ namespace Server
     public class PacketManager
     {{
         #region Singleton
-        static PacketManager _instance;
+        static PacketManager _instance = new PacketManager();
         public static PacketManager Instance 
         {{
             get
             {{
-                if (_instance == null) 
-                {{
-                    _instance = new PacketManager();
-                }}
                 return _instance;
             }}
         }}
@@ -34,6 +30,11 @@ namespace Server
 
         Dictionary<ushort, Action<PacketSession, ArraySegment<byte>>> _onRecv = new Dictionary<ushort, Action<PacketSession, ArraySegment<byte>>>();
         Dictionary<ushort, Action<PacketSession, IPacket>> _handler = new Dictionary<ushort, Action<PacketSession, IPacket>>();
+
+        PacketManager() 
+        {{
+            Register();
+        }}
 
         public void Register() 
         {{
@@ -226,7 +227,7 @@ count += sizeof({1});";
         //{0} 변수 이름
         public static string writeStringFormat =
 @"var {0}Len = (ushort) Encoding.Unicode.GetBytes(this.{0}, 0, this.{0}.Length, segment.Array, segment.Offset + count + sizeof(ushort));
-success &= BitConverter.TryWriteBytes(s.Slice(count, nameLen), nameLen);
+success &= BitConverter.TryWriteBytes(s.Slice(count, {0}Len), {0}Len);
 count += sizeof(ushort);
 count += {0}Len;";
         //{0} 리스트 이름 {대문자}

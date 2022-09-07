@@ -14,10 +14,10 @@ namespace Server
     {
 
         static Listener listener = new Listener();
+        public static GameRoom Room = new GameRoom();
 
         static void Main(string[] args)
         {
-            PacketManager.Instance.Register();
 
             var host = Dns.GetHostName();
             var ipHost = Dns.GetHostEntry(host);
@@ -25,7 +25,7 @@ namespace Server
             IPEndPoint endPoint = new IPEndPoint(ipAddress, 7777);
 
 
-            listener.Init(endPoint, () => new ClientSession());
+            listener.Init(endPoint, () => SessionManager.Instance.Generate());
             Console.WriteLine("Listening....");
 
             while (true)

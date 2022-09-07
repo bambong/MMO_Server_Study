@@ -10,28 +10,24 @@ namespace Server
 
 	class ClientSession : PacketSession
     {
+        public int SessionId { get; set; }
+        public GameRoom Room { get; set; }
         public override void OnConnected(EndPoint endPoint)
         {
             Console.WriteLine($"OnConnected : {endPoint}");
-
-            //Packet packet = new Packet() { size = 4, id = 10 };
-
-            //var openSegement = SendBufferHelper.Open(4096);
-            //byte[] buffer = BitConverter.GetBytes(packet.size);
-            //byte[] buffer2 = BitConverter.GetBytes(packet.id);
-            //Array.Copy(buffer, 0, openSegement.Array, openSegement.Offset, buffer.Length);
-            //Array.Copy(buffer2, 0, openSegement.Array, openSegement.Offset + buffer.Length, buffer2.Length);
-            //var sendBuff = SendBufferHelper.Close(buffer.Length + buffer2.Length);
-
-            //Send(sendBuff);
-
-
-            Thread.Sleep(1000);
-            DisConnect();
+            
+            Program.Room.Push(() => Program.Room.Enter(this));
         }
 
         public override void OnDisConnected(EndPoint endPoint)
         {
+            SessionManager.Instance.Remove(this);
+            if(Room != null) 
+            {
+                GameRoom room = Room;
+                Room.Push(() => room.Leave(this));
+                Room = null;
+            }
             Console.WriteLine($"OnDisConnected : {endPoint}");
         }
 
@@ -42,7 +38,7 @@ namespace Server
 
         public override void OnSend(int numOfByte)
         {
-            Console.WriteLine($"Transferred bytes : {numOfByte} ");
+            //Console.WriteLine($"Transferred bytes : {numOfByte} ");
         }
     }
 }
